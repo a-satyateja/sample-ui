@@ -42,6 +42,7 @@ pipeline {
 			steps{
 				sh "gcloud config list"
 				// sh "docker-credential-gcr configure-docker"
+        sh "gcloud auth configure-docker"
 				sh "docker push gcr.io/automatic-asset-253215/a-app-image:build-id-${BUILD_NUMBER}"
 			}
 		}
