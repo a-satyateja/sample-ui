@@ -9,7 +9,7 @@ pipeline {
 			}
     	}
 
-		stage ('git clone - dev') {
+		stage ('git clone - master') {
 			steps{
 				git branch: 'master',
 				credentialsId: 'git',
@@ -17,7 +17,7 @@ pipeline {
 			}
 		}
 
-		stage('Executing code'){
+		stage('Checking env'){
 			steps{
 				echo 'Baking Docker Image and Tagging with build number'
 				sh """
@@ -29,7 +29,7 @@ pipeline {
 			}
     	}
 
-		stage ('Tag Docker Image'){
+		stage ('Build and Tag Docker Image'){
 			steps{
 				sh """
 					pwd && docker build -t a-app-image .
