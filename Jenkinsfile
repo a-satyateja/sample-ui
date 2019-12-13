@@ -41,23 +41,23 @@ pipeline {
 		stage ('Push Docker Image to GCR'){
 			steps{
 				sh "gcloud config list"
-				sh "docker-credential-gcr configure-docker"
+				// sh "docker-credential-gcr configure-docker"
 				sh "docker push gcr.io/automatic-asset-253215/a-app-image:build-id-${BUILD_NUMBER}"
 			}
 		}
+// /usr/local/bin/helm init --upgrade
+		stage ('Deploy to kubernetes'){
+			steps{
+				sh """
+				gcloud container clusters get-credentials cluster-1 --project automatic-asset-253215 --region us-central1-a
+				kubectl get ns
 
-	// 	stage ('Deploy to kubernetes'){
-	// 		steps{
-	// 			sh """
-	// 			gcloud container clusters get-credentials cluster-1 --project automatic-asset-253215 --region us-central1
-	// 			kubectl get ns
-	// 			/usr/local/bin/helm init --upgrade
-	// 			/usr/local/bin/helm repo add techocamp-repo https://techocamp-helm-charts.storage.googleapis.com
-	// 			/usr/local/bin/helm repo update
-	// 			/usr/local/bin/helm upgrade --install assessment-server techocamp-repo/techocamp-helm-repo --namespace development -f applications/assessment-server/values.yaml --set=image.tag=build-id-${BUILD_NUMBER}
-	// 			"""
-	// 		}
-	// 	}
-  // }
+				/usr/local/bin/helm repo add ui-charts https://ui-charts.storage.googleapis.com
+				/usr/local/bin/helm repo update
+				/usr/local/bin/helm upgrade ui-app --install ui-charts/ui-charts -f values.yaml --set=image.tag=build-id-${BUILD_NUMBER}
+				"""
+			}
+		}
+  }
 	}
 }
